@@ -41,16 +41,6 @@ def connect_to_db(db_name):
         db = db_name
     )
 
-def execute_query(query, connection):
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute(query)
-            getResult = cursor.fetchall()
-            columns = [column[0] for column in cursor.description]
-        return DataFrame(getResult, columns = columns)
-    finally:
-        connection.close()
-
 def set_custom_css():
     custom_css = """
     <style>
@@ -96,7 +86,7 @@ def store_manager_app():
 
     st.markdown(f"""
     <h4 style="background-color: {CLAIRE_DEEP_PURPLE}; color: white; padding: 10px;">
-        Simulate a Store
+        STORE MANAGER
     </h4>
     """, unsafe_allow_html=True)
 
