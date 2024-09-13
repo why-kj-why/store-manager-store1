@@ -128,7 +128,7 @@ def store_manager_app():
         cur = conn.cursor()
         cur.execute(sql_query)
         getDataTable = cur.fetchall()
-        columns = [column[0] for column in cursor.description]
+        columns = [column[0] for column in cur.description]
         getDataTable = pd.DataFrame(getResult, columns=columns)
 
         st.dataframe(getDataTable)
