@@ -101,7 +101,7 @@ def store_manager_app():
         },
         "What were the sales during the 'Autumn/Winter' season for store with latest location VILLAGE CROSSING?": {
             "sql": "SELECT dll.LatestLocation,SUM(f.NetSaleUSD) as TotalSales, d.Season, d.FiscalMonthName, d.FiscalYear \nFROM fact_Sale f JOIN dim_Calendar d ON f.CalendarKey = d.CalendarKey JOIN dim_Location_Latest dll ON f.LocationLatestKey =dll.LocationLatestKey WHERE d.Season = 'Autumn/Winter' AND f.LocationLatestKey = (SELECT LocationLatestKey FROM dim_Location_Latest dll WHERE dll.LatestLocation = 'VILLAGE CROSSING') GROUP BY d.FiscalMonthName, d.FiscalYear ORDER BY d.FiscalYear DESC, d.FiscalMonthName;",
-            "nlr": "The sales during the 'Autumn/Winter' season for the store located at VILLAGE CROSSING were as follows: In August 2023, the sales totaled 1,235.49 USD; in December 2022, the sales amounted to $29,932.37; and in January 2022, the sales were 18,783.33 USD.",
+            "nlr": "The sales during the 'Autumn/Winter' season for the store located at VILLAGE CROSSING were as follows: In August 2023, the sales totaled 1,235.49 USD; in December 2022, the sales amounted to 29,932.37 USD; and in January 2022, the sales were 18,783.33 USD.",
         },
         "What is the average number of units sold per transaction at the latest location of store VILLAGE CROSSING?": {
             "sql": "SELECT AVG(f.TransactionCountTY) AS AverageUnitsSold FROM fact_Basket f\nJOIN dim_Location_Latest d ON f.LocationLatestKey = d.LocationLatestKey\nWHERE d.LatestLocation = 'VILLAGE CROSSING';",
