@@ -91,6 +91,22 @@ def store_manager_app():
             "sql": "SELECT f.NetSaleLocal, f.NetSaleLocalLY FROM fact_Sale f JOIN dim_Calendar c ON f.CalendarKey = c.CalendarKey JOIN dim_Location_Latest l ON f.LocationLatestKey = l.LocationLatestKey WHERE l.LatestLocation = 'VILLAGE CROSSING' AND c.CalendarDate = '2023-07-31';",
             "nlr": "On July 31, 2023, the net sales in USD for the latest location of the store Village Crossing were as follows: 448.98, 49.98, and 40.00. In comparison, there were no net sales recorded for the same period last year."
         },
+        "What is the Daily Sales Report (DSR) using our sales records for latest location of store VILLAGE CROSSING on July 31, 2023?": {
+            "sql": "SELECT f.NetSaleLocal, f.NetSaleUSD, f.NetQuantity, c.CalendarDate FROM fact_Sale f JOIN dim_Calendar c ON f.CalendarKey = c.CalendarKey JOIN dim_Location_Latest l ON f.LocationLatestKey = l.LocationLatestKey WHERE l.LatestLocation = 'VILLAGE CROSSING' AND c.CalendarDate = '2023-07-31';",
+            "nlr": "On July 31, 2023, the Daily Sales Report (DSR) for the Village Crossing store shows the following sales records: The total net sales in the local currency amounted to 448.98 USD, with a total of 82 items sold. Additionally, there were sales of 49.98 USD from 2 items and 40.00 USD from another 2 items.",
+        },
+        "Compare the average sales revenue for the store with latest location VILLAGE CROSSING with the average sales revenue for all stores with Latest Country USA.": {
+            "sql": "SELECT AVG(fs.NetSaleUSD) AS AverageSalesRevenue FROM fact_Sale fs JOIN dim_Location_Latest dl ON fs.LocationLatestKey = dl.LocationLatestKey WHERE dl.LatestLocation = 'VILLAGE CROSSING' \nGROUP BY dl.LatestCountry\nUNION\nSELECT AVG(fs.NetSaleUSD) AS AverageSalesRevenue FROM fact_Sale fs JOIN dim_Location_Latest dl ON fs.LocationLatestKey = dl.LocationLatestKey WHERE dl.LatestCountry = 'USA';",
+            "nlr": "The average sales revenue for the store located at VILLAGE CROSSING is approximately 319.77, while the average sales revenue for all stores in the USA is approximately 471.99.",
+        },
+        "What were the sales during the 'Autumn/Winter' season for store with latest location VILLAGE CROSSING?": {
+            "sql": "SELECT dll.LatestLocation,SUM(f.NetSaleUSD) as TotalSales, d.Season, d.FiscalMonthName, d.FiscalYear \nFROM fact_Sale f JOIN dim_Calendar d ON f.CalendarKey = d.CalendarKey JOIN dim_Location_Latest dll ON f.LocationLatestKey =dll.LocationLatestKey WHERE d.Season = 'Autumn/Winter' AND f.LocationLatestKey = (SELECT LocationLatestKey FROM dim_Location_Latest dll WHERE dll.LatestLocation = 'VILLAGE CROSSING') GROUP BY d.FiscalMonthName, d.FiscalYear ORDER BY d.FiscalYear DESC, d.FiscalMonthName;",
+            "nlr": "The sales during the 'Autumn/Winter' season for the store located at VILLAGE CROSSING were as follows: In August 2023, the sales totaled 1,235.49 USD; in December 2022, the sales amounted to $29,932.37; and in January 2022, the sales were 18,783.33 USD.",
+        },
+        "What is the average number of units sold per transaction at the latest location of store VILLAGE CROSSING?": {
+            "sql": "SELECT AVG(f.TransactionCountTY) AS AverageUnitsSold FROM fact_Basket f\nJOIN dim_Location_Latest d ON f.LocationLatestKey = d.LocationLatestKey\nWHERE d.LatestLocation = 'VILLAGE CROSSING';",
+            "nlr": "The average number of units sold per transaction at the latest location of store VILLAGE CROSSING is approximately 22.78.",
+        },
     }
 
     if 'queries' not in st.session_state:
