@@ -1,0 +1,1 @@
+# store-manager-store1
