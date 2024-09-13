@@ -132,3 +132,9 @@ def store_manager_app():
 
         nlr = store_questions[selected_query]["nlr"]
         st.write(nlr)
+
+# Main Application
+set_custom_css()
+
+# Load the STORE MANAGER app directly without sidebar or toggle
+store_manager_app()
