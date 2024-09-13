@@ -152,7 +152,7 @@ def store_manager_app():
         columns = [column[0] for column in cur.description]
         getDataTable = DataFrame(getDataTable, columns=columns)
 
-        st.dataframe(getDataTable)
+        # st.dataframe(getDataTable)
 
         nlr = store_questions[selected_query]["nlr"]
         st.write(nlr)
