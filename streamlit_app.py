@@ -2,16 +2,13 @@ import streamlit as st
 from pandas import DataFrame
 from pymysql import connect
 
-# database credentials
 DB_HOST = "tellmoredb.cd24ogmcy170.us-east-1.rds.amazonaws.com"
 DB_USER = "admin"
 DB_PASS = "2yYKKH8lUzaBvc92JUxW"
 DB_PORT = "3306"
 DB_NAME = "claires"
-#DB_NAME = "retail_panopticon"
 CONVO_DB_NAME = "store_questions"
 
-# Claire's Accessories' colours
 CLAIRE_DEEP_PURPLE = "#553D94"
 CLAIRE_MAUVE = "#D2BBFF"
 
@@ -22,7 +19,6 @@ st.set_page_config(
     page_icon = 'claires-logo.svg',
 )
 
-# session state variables
 if 'history' not in st.session_state:
     st.session_state['history'] = []
 
@@ -79,7 +75,17 @@ def store_manager_app():
         image_data = image.read()
     st.logo(image=image_data)
 
-    store_questions = {}
+    store_questions = {
+        "What is the sum of number of transactions this year compared to last year for latest location of store VILLAGE CROSSING?": {
+            "sql": "SELECT SUM(f.TransactionCountTY) AS TotalTransactionsTY, SUM(f.TransactionCountLY) AS TotalTransactionsLY FROM fact_Basket f JOIN dim_Location_Latest l ON f.LocationLatestKey = l.LocationLatestKey WHERE l.LatestLocation = 'VILLAGE CROSSING';",
+            "nlr": "The data table returned indicates that the total number of transactions for the latest location of the store VILLAGE CROSSING this year is 5,285, while the number of transactions from last year is 0. This suggests that the store either did not operate last year or had no recorded transactions during that time, resulting in a significant increase in activity this year.",
+            
+        },
+        "What are the net margins in USD for store with latest location VILLAGE CROSSING?": {
+            "sql": "SELECT f.NetExVATUSDPlan FROM Fact_Store_Plan f JOIN dim_Location_Latest l ON f.LocationLatestKey = l.LocationLatestKey WHERE l.LatestLocation = 'VILLAGE CROSSING';",
+            "nlr": "The data table returned consists of a series of net margin values in USD for the store located at VILLAGE CROSSING. The values represent individual entries of net margins, with some figures appearing multiple times, indicating that there may be repeated measurements or records for certain time periods or transactions.\n\nThe margins range from a low of 0.0 USD, which suggests instances where there was no profit, to a high of 17,703.0 USD, indicating significant profitability in some cases. Most values fall within a relatively consistent range, with several margins clustered around the 6,000 to 10,000 USD mark. \n\nThis data provides a comprehensive view of the store's financial performance, highlighting both the variability and consistency in net margins over the observed period. The presence of multiple identical values suggests that certain margins were likely recorded under similar conditions or timeframes.",
+        },
+    }
 
     if 'queries' not in st.session_state:
         st.session_state['queries'] = {}
@@ -115,15 +121,8 @@ def store_manager_app():
     query_options = list(store_questions.keys())
     selected_query = st.selectbox("Select a query", query_options if query_options else ["Select a query"])
 
-    if unpin_button_pressed and selected_query != "Select a query":
-        queries_for_store.pop(selected_query, None)
-        delete_query_from_db(selected_query)
-        st.success(f"Query '{selected_query}' has been removed.")
-    elif unpin_button_pressed:
-        st.warning("Select a query to unpin.")
-
     if selected_query and selected_query != "Select a query":
-        sql_query = queries_for_store[selected_query]["sql"]
+        sql_query = store_questions[selected_query]["sql"]
         conn = connect_to_db(DB_NAME)
         cur = conn.cursor()
         cur.execute(sql_query)
@@ -131,5 +130,5 @@ def store_manager_app():
 
         st.dataframe(getDataTable)
 
-        nlr = queries_for_store[selected_query]["nlr"]
+        nlr = store_questions[selected_query]["nlr"]
         st.write(nlr)
