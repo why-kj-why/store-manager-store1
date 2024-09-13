@@ -89,7 +89,7 @@ def store_manager_app():
         "What is the net sales on July 31, 2023 compared to the same period last year for latest location of store VILLAGE CROSSING?":
         {
             "sql": "SELECT f.NetSaleLocal, f.NetSaleLocalLY FROM fact_Sale f JOIN dim_Calendar c ON f.CalendarKey = c.CalendarKey JOIN dim_Location_Latest l ON f.LocationLatestKey = l.LocationLatestKey WHERE l.LatestLocation = 'VILLAGE CROSSING' AND c.CalendarDate = '2023-07-31';",
-            "nlr": "On July 31, 2023, the net sales for the latest location of the store Village Crossing were as follows: $448.98, $49.98, and $40.00. In comparison, there were no net sales recorded for the same period last year."
+            "nlr": "On July 31, 2023, the net sales in USD for the latest location of the store Village Crossing were as follows: 448.98, 49.98, and 40.00. In comparison, there were no net sales recorded for the same period last year."
         },
     }
 
