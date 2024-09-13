@@ -86,6 +86,11 @@ def store_manager_app():
             "sql": "SELECT f.NetExVATUSDPlan FROM Fact_Store_Plan f JOIN dim_Location_Latest l ON f.LocationLatestKey = l.LocationLatestKey WHERE l.LatestLocation = 'VILLAGE CROSSING';",
             "nlr": "The data table returned consists of a series of net margin values in USD for the store located at VILLAGE CROSSING. The values represent individual entries of net margins, with some figures appearing multiple times, indicating that there may be repeated measurements or records for certain time periods or transactions.\n\nThe margins range from a low of 0.0 USD, which suggests instances where there was no profit, to a high of 17,703.0 USD, indicating significant profitability in some cases. Most values fall within a relatively consistent range, with several margins clustered around the 6,000 to 10,000 USD mark. \n\nThis data provides a comprehensive view of the store's financial performance, highlighting both the variability and consistency in net margins over the observed period. The presence of multiple identical values suggests that certain margins were likely recorded under similar conditions or timeframes.",
         },
+        "What is the net sales on July 31, 2023 compared to the same period last year for latest location of store VILLAGE CROSSING?":
+        {
+            "sql": "SELECT f.NetSaleLocal, f.NetSaleLocalLY FROM fact_Sale f JOIN dim_Calendar c ON f.CalendarKey = c.CalendarKey JOIN dim_Location_Latest l ON f.LocationLatestKey = l.LocationLatestKey WHERE l.LatestLocation = 'VILLAGE CROSSING' AND c.CalendarDate = '2023-07-31';",
+            "nlr": "On July 31, 2023, the net sales for the latest location of the store Village Crossing were as follows: $448.98, $49.98, and $40.00. In comparison, there were no net sales recorded for the same period last year."
+        },
     }
 
     if 'queries' not in st.session_state:
