@@ -76,6 +76,7 @@ def store_manager_app():
     st.logo(image=image_data)
 
     store_questions = {
+        "Select a query": None,
         "What is the sum of number of transactions this year compared to last year for latest location of store VILLAGE CROSSING?": {
             "sql": "SELECT SUM(f.TransactionCountTY) AS TotalTransactionsTY, SUM(f.TransactionCountLY) AS TotalTransactionsLY FROM fact_Basket f JOIN dim_Location_Latest l ON f.LocationLatestKey = l.LocationLatestKey WHERE l.LatestLocation = 'VILLAGE CROSSING';",
             "nlr": "The data table returned indicates that the total number of transactions for the latest location of the store VILLAGE CROSSING this year is 5,285, while the number of transactions from last year is 0. This suggests that the store either did not operate last year or had no recorded transactions during that time, resulting in a significant increase in activity this year.",
@@ -127,6 +128,8 @@ def store_manager_app():
         cur = conn.cursor()
         cur.execute(sql_query)
         getDataTable = cur.fetchall()
+        columns = [column[0] for column in cursor.description]
+        getDataTable = pd.DataFrame(getResult, columns=columns)
 
         st.dataframe(getDataTable)
 
